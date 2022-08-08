@@ -119,6 +119,10 @@ function setup() {
                 { "x": 250, "y": 430 },
                 { "x": 400, "y": 430 }
             ], 30, 1),
+            new Laser(50, 50, 10, [
+                { "x": 300, "y": 150 },
+                { "x": 500, "y": 150 },
+            ], 30, 30),
             new PatrolGuard(400, 460, 25, [
                 { "x": 400, "y": 460 },
                 { "x": 120, "y": 460 }
@@ -212,6 +216,10 @@ function doCurrentAction() {
     }
     if (currentThing == "failing") {
         if (currentThingTimeLeft == 0) {
+            for (var powerup of powerupsunlocked) {
+                powerup.cooldowntime = 0;
+                powerup.inUse = false;
+            }
             currentThing = "playing";
             setup();
         }
