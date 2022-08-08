@@ -1,5 +1,6 @@
 var enemies, player, playing, objective, winning, levels;
 var curlevel = 0;
+var timetilrestart = 30;
 
 function setup() {
     levels = [];
@@ -118,6 +119,12 @@ function draw() {
 
         } else {
             drawGameOver();
+            timetilrestart--;
+            if (timetilrestart == 0) {
+                playing = true;
+                timetilrestart = 30;
+                setup();
+            }
         }
     }
 

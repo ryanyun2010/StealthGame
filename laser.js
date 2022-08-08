@@ -29,7 +29,6 @@ class Laser extends Enemy {
             }
             if (this.intersectPlayer()) {
                 playing = false;
-                drawGameOver();
             }
         }
     }
