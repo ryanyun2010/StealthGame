@@ -171,12 +171,9 @@ function draw() {
     objective.update();
     for (var powerup of powerupsunlocked) {
         powerup.update();
-        powerup.timeleft--;
     }
-    for (var i = 0; i < powerupsunlocked.length; i++) {
-        if (register[i + 48]) {
-            powerupsunlocked[i].useAnimation();
-        }
+    if (register[48]) {
+        powerupsunlocked[0].useAnimation();
     }
 }
 

@@ -34,6 +34,7 @@ class SmokeBombPowerup extends Powerup {
     update() {
         this.draw();
         if (this.timeleft < 1) {
+            this.timeleft = 0;
             this.inUse = false;
             this.disable();
         }

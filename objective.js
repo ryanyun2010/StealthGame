@@ -28,8 +28,8 @@ class Objective {
         if (this.isTouchingPlayer()) {
             curlevel++;
             if (curlevel == levels.length) {
-                winning = true;
-                timetilnextlevel = -1;
+                currentThing = "winning";
+                currentThingTimeLeft = -1;
             } else {
                 if (curlevel == 2) {
                     currentThing = "unlockingpowerup";
