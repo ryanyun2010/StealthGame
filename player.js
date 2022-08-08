@@ -9,7 +9,7 @@ class Player {
     }
     draw() {
         noStroke();
-        fill(0, 255, 0);
+        fill(0, 255, 255);
         ellipse(this.x, this.y, this.size, this.size);
     }
     move() {
@@ -65,7 +65,6 @@ class Player {
                 if (this.bouncingx > 0) {
                     this.bouncingx = 0;
                 }
-                console.log(this.bouncingx);
             } else {
                 this.x += this.speed;
             }

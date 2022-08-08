@@ -1,8 +1,20 @@
 var enemies, player, playing, objective, winning, levels;
 var curlevel = 0;
 var timetilrestart = 30;
+var starting = true;
+var inhowtoplay = false;
+var startscreenimg, howtoplayscreenimg, successimg, failureimg;
+var timetilnextlevel = 15;
+
+function preload() {
+    startscreenimg = loadImage("img/startscreen.png");
+    howtoplayscreenimg = loadImage("img/HowToPlay.png");
+    successimg = loadImage("img/Success.png");
+    failureimg = loadImage("img/Failure.png");
+}
 
 function setup() {
+
     levels = [];
     levels.push({
         "enemies": [new PatrolGuard(250, 250, 25, [
@@ -102,13 +114,41 @@ function setLevel(level) {
     objective = level.objective;
 }
 
+document.getElementById("playbtn").addEventListener("click", function() {
+    starting = false;
+});
+document.getElementById("howbtn").addEventListener("click", function() {
+    starting = false;
+    inhowtoplay = true;
+    document.getElementById("back").style.display = "block";
+});
+document.getElementById("back").addEventListener("click", function() {
+    starting = true;
+    inhowtoplay = false;
+    document.getElementById("back").style.display = "none";
+});
+
 function draw() {
+    if (starting) {
+        image(startscreenimg, 0, 0, 500, 400);
+        return;
+    } else if (inhowtoplay) {
+        image(howtoplayscreenimg, -100, 0, 650, 400);
+        return;
+    }
     if (winning) {
-        drawWinScreen();
+        background(0, 0, 0);
+        image(successimg, 0, 100, 500, 300);
         playing = false;
+        timetilnextlevel--;
+        if (timetilnextlevel == 0) {
+            winning = false;
+            playing = true;
+            setup();
+        }
     } else {
         if (playing) {
-            background(200, 255, 200);
+            background(0, 0, 0);
             for (enemy of enemies) {
                 enemy.update();
             }
@@ -118,7 +158,8 @@ function draw() {
             objective.update();
 
         } else {
-            drawGameOver();
+            background(0, 0, 0)
+            image(failureimg, 0, 100, 500, 300);
             timetilrestart--;
             if (timetilrestart == 0) {
                 playing = true;
@@ -162,21 +203,4 @@ function checkAlert() {
             }
         }
     }
-}
-
-function drawWinScreen() {
-    background(0, 0, 0, 8);
-    fill("yellow");
-    textSize(48);
-    textAlign(CENTER, CENTER);
-    text("You Won!", 250, 250);
-}
-
-function drawGameOver() {
-    background(0, 0, 0, 8);
-    fill("red");
-    textSize(48);
-    textAlign(CENTER, CENTER);
-    text("You Failed!", 250, 250);
-
 }

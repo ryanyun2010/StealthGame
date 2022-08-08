@@ -7,9 +7,9 @@ class SecurityCamera extends Enemy {
         this.focus = start || this.nodes[0];
         this.idletime = idletime || 60;
         this.colors = {
-            "idle": color(200, 200, 200, 150),
-            "alert": color(60, 60, 60, 100),
-            "pan": color(200, 200, 200, 150),
+            "idle": color(200, 150, 150, 80),
+            "alert": color(200, 60, 60, 255),
+            "pan": color(200, 150, 150, 80),
             "self": color(120, 120, 120)
         };
     }
@@ -69,10 +69,8 @@ class SecurityCamera extends Enemy {
             }
         }
         if (this.state == "pan") {
-            console.log(this.index, this.nodes)
             let theta = this.nodes[this.index];
             let dt = simplifyAngle(theta - this.focus);
-            console.log(dt);
             if (dt < PI / 60) {
                 this.state = "idle";
                 this.idleTimer = 0;

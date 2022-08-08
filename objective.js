@@ -29,9 +29,10 @@ class Objective {
             curlevel++;
             if (curlevel == levels.length) {
                 winning = true;
-                drawWinScreen();
+                timetilnextlevel = -1;
             } else {
-                setup();
+                timetilnextlevel = 30;
+                winning = true;
             }
         }
     }

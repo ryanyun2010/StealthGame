@@ -1,0 +1,26 @@
+#playbtn {
+    width: 94px;
+    height: 44px;
+    position: fixed;
+    top: 271px;
+    left: 210px;
+}
+
+#howbtn {
+    width: 142px;
+    height: 41px;
+    position: fixed;
+    top: 329px;
+    left: 187px;
+}
+
+#back {
+    position: fixed;
+    color: white;
+    font-family: sans-serif;
+    font-weight: bold;
+    left: 30px;
+    top: -10px;
+    display: none;
+    font-size: 30px;
+}

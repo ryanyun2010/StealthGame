@@ -3,10 +3,10 @@ class PatrolGuard extends Enemy {
         super(x, y, s, n);
         this.idletime = idletime || 60;
         this.colors = {
-            "chase": color(255, 0, 0, 150),
-            "idle": color(255, 40, 40, 60),
-            "patrol": color(255, 40, 40, 80),
-            "self": color(0, 0, 0)
+            "chase": color(255, 0, 0, 255),
+            "idle": color(255, 40, 40, 150),
+            "patrol": color(255, 40, 40, 190),
+            "self": color(255, 255, 255)
         };
     }
     states() {
