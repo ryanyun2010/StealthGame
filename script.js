@@ -1,5 +1,5 @@
 var enemies, player, playing, objective, levels;
-var curlevel = 1;
+var curlevel = 0;
 var startscreenimg, howtoplayscreenimg, successimg, failureimg, smokeunlockimg, smokeimg;
 var unlocking = "";
 var powerupsunlocked = [];
