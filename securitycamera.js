@@ -79,7 +79,9 @@ class SecurityCamera extends Enemy {
         }
         if (this.state != "alert") {
             if (canSee(this, player)) {
-                this.state = "alert";
+                if (securitycamerasdisabled) {} else {
+                    this.state = "alert";
+                }
             }
         }
         if (this.state == "alert") {

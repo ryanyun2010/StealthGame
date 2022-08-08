@@ -31,8 +31,8 @@ class Objective {
                 winning = true;
                 timetilnextlevel = -1;
             } else {
-                timetilnextlevel = 30;
-                winning = true;
+                currentThingTimeLeft = 30;
+                currentThing = "winning";
             }
         }
     }

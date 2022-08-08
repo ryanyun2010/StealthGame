@@ -1,16 +1,19 @@
-var enemies, player, playing, objective, winning, levels;
-var curlevel = 0;
-var timetilrestart = 30;
-var starting = true;
-var inhowtoplay = false;
-var startscreenimg, howtoplayscreenimg, successimg, failureimg;
-var timetilnextlevel = 15;
+var enemies, player, playing, objective, levels;
+var curlevel = 1;
+var startscreenimg, howtoplayscreenimg, successimg, failureimg, smokeunlockimg, smokeimg;
+var unlocking = "";
+var powerupsunlocked = [];
+var currentThing = "starting";
+var currentThingTimeLeft = 0;
+
 
 function preload() {
     startscreenimg = loadImage("img/startscreen.png");
     howtoplayscreenimg = loadImage("img/HowToPlay.png");
     successimg = loadImage("img/Success.png");
     failureimg = loadImage("img/Failure.png");
+    smokeunlockimg = loadImage("img/smokebomb.png");
+    smokeimg = loadImage("img/smokebombicon.png");
 }
 
 function setup() {
@@ -102,6 +105,32 @@ function setup() {
         "player": new Player(250, 400, 25),
         "objective": new Objective(400, 100, 40)
     });
+    levels.push({
+        "enemies": [
+            new Laser(50, 50, 10, [
+                { "x": 0, "y": 430 },
+                { "x": 200, "y": 430 }
+            ], 30, 1),
+            new Laser(50, 50, 10, [
+                { "x": 200, "y": 430 },
+                { "x": 200, "y": 390 },
+                { "x": 250, "y": 390 },
+                { "x": 250, "y": 430 },
+                { "x": 400, "y": 430 }
+            ], 30, 1),
+            new PatrolGuard(400, 460, 25, [
+                { "x": 400, "y": 460 },
+                { "x": 120, "y": 460 }
+            ], 30, PI / 10, 40),
+            new SecurityCamera(500, 0, 20, [PI, PI * 0.5], 250, PI / 60, 1, PI * 0.7),
+            new PatrolGuard(400, 150, 25, [{ "x": 400, "y": 150 }, { "x": 200, "y": 150 }], 11, PI * 0.6, 70, PI / 60),
+            new PatrolGuard(260, 150, 25, [{ "x": 400, "y": 150 }, { "x": 200, "y": 150 }], 7, PI * 0.3, 70, PI / 60),
+            new PatrolGuard(90, 50, 25, [{ "x": 400, "y": 50 }, { "x": 200, "y": 50 }], 15, PI * 0.4, 70, PI / 60),
+            new PatrolGuard(400, 50, 25, [{ "x": 400, "y": 50 }, { "x": 200, "y": 50 }], 12, PI * 0.5, 70, PI / 60)
+        ],
+        "player": new Player(40, 460, 25),
+        "objective": new Objective(400, 100, 40)
+    });
 
     playing = true;
     setLevel(levels[curlevel]);
@@ -115,59 +144,65 @@ function setLevel(level) {
 }
 
 document.getElementById("playbtn").addEventListener("click", function() {
-    starting = false;
+    currentThing = "playing";
 });
 document.getElementById("howbtn").addEventListener("click", function() {
-    starting = false;
-    inhowtoplay = true;
     document.getElementById("back").style.display = "block";
+    currentthing = "howtoplay";
 });
 document.getElementById("back").addEventListener("click", function() {
-    starting = true;
-    inhowtoplay = false;
+    currentThing = "starting";
     document.getElementById("back").style.display = "none";
 });
 
 function draw() {
-    if (starting) {
-        image(startscreenimg, 0, 0, 500, 400);
-        return;
-    } else if (inhowtoplay) {
-        image(howtoplayscreenimg, -100, 0, 650, 400);
+    if (currentThing != "playing") {
+        doCurrentAction();
         return;
     }
-    if (winning) {
-        background(0, 0, 0);
-        image(successimg, 0, 100, 500, 300);
-        playing = false;
-        timetilnextlevel--;
-        if (timetilnextlevel == 0) {
-            winning = false;
-            playing = true;
+    background(0, 0, 0);
+    for (enemy of enemies) {
+        enemy.update();
+    }
+    player.update();
+    checkGameOver();
+    checkAlert();
+    objective.update();
+    for (var powerup of powerupsunlocked) {
+        powerup.update();
+    }
+}
+
+function doCurrentAction() {
+    if (currentThing == "starting") {
+        image(startscreenimg, 0, 0, 500, 400);
+    }
+    if (currentThing == "howtoplay") {
+        image(howtoplayscreenimg, -100, 0, 650, 400);
+    }
+    if (currentThing == "unlockingpowerup") {
+        if (unlocking == "smoke") {
+            background(0, 0, 0);
+            image(smokeunlockimg, 0, 100, 500, 300);
+        }
+    }
+    if (currentThing == "winning") {
+        if (currentThingTimeLeft == 0) {
+            currentThing = "playing";
             setup();
         }
-    } else {
-        if (playing) {
-            background(0, 0, 0);
-            for (enemy of enemies) {
-                enemy.update();
-            }
-            player.update();
-            checkGameOver();
-            checkAlert();
-            objective.update();
-
-        } else {
-            background(0, 0, 0)
-            image(failureimg, 0, 100, 500, 300);
-            timetilrestart--;
-            if (timetilrestart == 0) {
-                playing = true;
-                timetilrestart = 30;
-                setup();
-            }
-        }
+        background(0, 0, 0);
+        image(successimg, 0, 100, 500, 300);
     }
+    if (currentThing == "failing") {
+        if (currentThingTimeLeft == 0) {
+            currentThing = "playing";
+            setup();
+        }
+        background(0, 0, 0);
+        image(failureimg, 0, 100, 500, 300);
+    }
+    currentThingTimeLeft--;
 
 }
 
@@ -177,7 +212,8 @@ function checkGameOver() {
             let d = dist(enemy.x, enemy.y, player.x, player.y);
             let s = (player.size + enemy.size) / 2;
             if (d < s) {
-                playing = false;
+                currentThingTimeLeft = 15;
+                currentThing = "failing";
             }
         }
     }

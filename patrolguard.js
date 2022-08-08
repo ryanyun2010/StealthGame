@@ -1,7 +1,10 @@
 class PatrolGuard extends Enemy {
-    constructor(x, y, s, n, idletime) {
+    constructor(x, y, s, n, idletime, fov, dof, turnspeed) {
         super(x, y, s, n);
         this.idletime = idletime || 60;
+        this.fov = fov || PI / 4;
+        this.dof = dof || 150;
+        this.turnspeed = turnspeed || PI / 120;
         this.colors = {
             "chase": color(255, 0, 0, 255),
             "idle": color(255, 40, 40, 150),

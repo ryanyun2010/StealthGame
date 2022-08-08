@@ -1,11 +1,13 @@
 class Laser extends Enemy {
-    constructor(x, y, s, n) {
+    constructor(x, y, s, n, activetime, idletime) {
         super(x, y, s, n);
         this.colors = {
             "idle": color(230, 230, 230, 150),
             "active": color(255, 0, 0, 150),
             "self": color(255, 255, 255)
         };
+        this.activetime = activetime || 120;
+        this.idletime = idletime || 60;
     }
     states() {
         if (this.state == "idle") {
@@ -17,18 +19,19 @@ class Laser extends Enemy {
     }
     transitions() {
         if (this.state == "idle") {
-            if (this.idleTimer == 60) {
+            if (this.idleTimer == this.idletime) {
                 this.idleTimer = 0;
                 this.state = "active";
             }
         }
         if (this.state == "active") {
-            if (this.idleTimer == 120) {
+            if (this.idleTimer == this.activetime) {
                 this.idleTimer = 0;
                 this.state = "idle";
             }
             if (this.intersectPlayer()) {
-                playing = false;
+                currentThing = "failing";
+                currentThingTimeLeft = 15;
             }
         }
     }
@@ -55,7 +58,6 @@ class Laser extends Enemy {
             let n2 = this.nodes[i + 1];
             if (circleLineOverlap(n1, n2, player)) {
                 return true;
-                s
             }
         }
         return false;
