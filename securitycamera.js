@@ -1,10 +1,11 @@
 class SecurityCamera extends Enemy {
-    constructor(x, y, s, n, dof) {
+    constructor(x, y, s, n, dof, speed, idletime, start) {
         super(x, y, s, n);
-        this.turnspeed = PI / 180;
+        this.turnspeed = speed || PI / 180;
         this.dof = dof;
         this.state = "pan";
-        this.focus = this.nodes[0];
+        this.focus = start || this.nodes[0];
+        this.idletime = idletime || 60;
         this.colors = {
             "idle": color(200, 200, 200, 150),
             "alert": color(60, 60, 60, 100),
@@ -25,10 +26,6 @@ class SecurityCamera extends Enemy {
         rectMode(CENTER, CENTER);
         rect(this.x, this.y, this.size, this.size)
 
-        //draw the current state above the enemy
-        textAlign(CENTER, CENTER);
-        textSize(20);
-        text(this.state, this.x, this.y - this.size * 0.9);
     }
     states() {
         if (this.state == "idle") {
@@ -62,7 +59,7 @@ class SecurityCamera extends Enemy {
     }
     transitions() {
         if (this.state == "idle") {
-            if (this.idleTimer == 60) {
+            if (this.idleTimer == this.idletime) {
                 this.state = "pan";
                 this.idleTimer = 0;
                 this.index++;
@@ -72,10 +69,13 @@ class SecurityCamera extends Enemy {
             }
         }
         if (this.state == "pan") {
+            console.log(this.index, this.nodes)
             let theta = this.nodes[this.index];
             let dt = simplifyAngle(theta - this.focus);
-            if (dt < PI / 90) {
+            console.log(dt);
+            if (dt < PI / 60) {
                 this.state = "idle";
+                this.idleTimer = 0;
                 return;
             }
         }

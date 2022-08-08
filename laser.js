@@ -23,7 +23,7 @@ class Laser extends Enemy {
             }
         }
         if (this.state == "active") {
-            if (this.idleTimer == 60) {
+            if (this.idleTimer == 120) {
                 this.idleTimer = 0;
                 this.state = "idle";
             }
@@ -34,14 +34,17 @@ class Laser extends Enemy {
         }
     }
     draw() {
-        fill(this.colors.self);
-        strokeWeight(3);
-        stroke(this.colors.active);
-
+        fill(255, 0, 0, 50)
         for (var n of this.nodes) {
             ellipse(n.x, n.y, this.size, this.size)
         }
         if (this.state != "idle") {
+            fill(this.colors.self);
+            strokeWeight(3);
+            stroke(this.colors.active);
+            for (var n of this.nodes) {
+                ellipse(n.x, n.y, this.size, this.size)
+            }
             for (var i = 0; i < this.nodes.length - 1; i++) {
                 line(this.nodes[i].x, this.nodes[i].y, this.nodes[i + 1].x, this.nodes[i + 1].y);
             }

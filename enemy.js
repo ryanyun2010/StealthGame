@@ -15,7 +15,7 @@ class Enemy {
         this.dof = 100;
         this.fov = PI / 3;
 
-        this.turnspeed = PI / 70;
+        this.turnspeed = PI / 50;
 
     }
 

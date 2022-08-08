@@ -1,10 +1,11 @@
 class PatrolGuard extends Enemy {
-    constructor(x, y, s, n) {
+    constructor(x, y, s, n, idletime) {
         super(x, y, s, n);
+        this.idletime = idletime || 60;
         this.colors = {
-            "chase": color(255, 0, 0, 100),
-            "idle": color(50, 250, 250, 150),
-            "patrol": color(50, 250, 250, 150),
+            "chase": color(255, 0, 0, 150),
+            "idle": color(255, 40, 40, 60),
+            "patrol": color(255, 40, 40, 80),
             "self": color(0, 0, 0)
         };
     }
@@ -35,11 +36,6 @@ class PatrolGuard extends Enemy {
         fill(this.colors.self);
         ellipse(this.x, this.y, this.size, this.size);
 
-        //draw the current state above the enemy
-        textAlign(CENTER, CENTER);
-        textSize(20);
-        text(this.state, this.x, this.y - this.size * 0.85);
-
     }
     transitions() {
         if (this.state != "chase") {
@@ -53,7 +49,7 @@ class PatrolGuard extends Enemy {
             }
         }
         if (this.state === "idle") {
-            if (this.idleTimer == 60) {
+            if (this.idleTimer == this.idletime) {
                 this.state = "patrol";
                 this.idleTimer = 0;
                 this.index++;
