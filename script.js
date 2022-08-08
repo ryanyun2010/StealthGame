@@ -5,6 +5,7 @@ var unlocking = "";
 var powerupsunlocked = [];
 var currentThing = "starting";
 var currentThingTimeLeft = 0;
+var using;
 
 
 function preload() {
@@ -148,7 +149,7 @@ document.getElementById("playbtn").addEventListener("click", function() {
 });
 document.getElementById("howbtn").addEventListener("click", function() {
     document.getElementById("back").style.display = "block";
-    currentthing = "howtoplay";
+    currentThing = "howtoplay";
 });
 document.getElementById("back").addEventListener("click", function() {
     currentThing = "starting";
@@ -170,20 +171,38 @@ function draw() {
     objective.update();
     for (var powerup of powerupsunlocked) {
         powerup.update();
+        powerup.timeleft--;
+    }
+    for (var i = 0; i < powerupsunlocked.length; i++) {
+        if (register[i + 48]) {
+            powerupsunlocked[i].useAnimation();
+        }
     }
 }
 
 function doCurrentAction() {
     if (currentThing == "starting") {
+        background(0, 0, 0);
         image(startscreenimg, 0, 0, 500, 400);
     }
     if (currentThing == "howtoplay") {
+        background(0, 0, 0);
         image(howtoplayscreenimg, -100, 0, 650, 400);
     }
+    if (currentThing == "usingpowerup") {
+        background(0, 0, 0);
+        image(using.unlockimg, 0, 100, 500, 300);
+        if (currentThingTimeLeft == 0) {
+            using.use();
+            currentThing = "playing";
+        }
+    }
     if (currentThing == "unlockingpowerup") {
-        if (unlocking == "smoke") {
-            background(0, 0, 0);
-            image(smokeunlockimg, 0, 100, 500, 300);
+        background(0, 0, 0);
+        image(unlocking.unlockimg, 0, 100, 500, 300);
+        if (currentThingTimeLeft == 0) {
+            currentThing = "playing";
+            setup();
         }
     }
     if (currentThing == "winning") {

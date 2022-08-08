@@ -12,14 +12,17 @@ class SecurityCamera extends Enemy {
             "pan": color(200, 150, 150, 80),
             "self": color(120, 120, 120)
         };
+        this.canAlert = true;
     }
     draw() {
-        fill(this.colors[this.state]);
-        noStroke();
-        let left = this.focus - this.fov / 2;
-        let right = this.focus + this.fov / 2;
-        let diameter = this.dof * 2;
-        arc(this.x, this.y, diameter, diameter, left, right);
+        if (this.canAlert) {
+            fill(this.colors[this.state]);
+            noStroke();
+            let left = this.focus - this.fov / 2;
+            let right = this.focus + this.fov / 2;
+            let diameter = this.dof * 2;
+            arc(this.x, this.y, diameter, diameter, left, right);
+        }
 
         //draw the enemy as a red circle
         fill(this.colors.self);
@@ -78,10 +81,8 @@ class SecurityCamera extends Enemy {
             }
         }
         if (this.state != "alert") {
-            if (canSee(this, player)) {
-                if (securitycamerasdisabled) {} else {
-                    this.state = "alert";
-                }
+            if (canSee(this, player) && this.canAlert) {
+                this.state = "alert";
             }
         }
         if (this.state == "alert") {
