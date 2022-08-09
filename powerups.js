@@ -10,6 +10,8 @@ class Powerup {
         this.inUse = false;
     }
     draw() {
+        fill("black");
+        rect(0, 0, 100, 50);
         image(this.icon, this.index * 30 + 20, 10, 20, 20);
         fill("white");
         textSize(20);
@@ -22,8 +24,6 @@ class Powerup {
         if (this.inUse) {
             text(Math.ceil(this.timeleft / 60) + "s left", this.index * 30 + 25, 60)
         }
-        fill("black");
-        rect(0, 0, 100, 50);
 
     }
 }
