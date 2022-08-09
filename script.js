@@ -50,7 +50,7 @@ function setup() {
                 { x: 140, y: 10 },
                 { x: 140, y: 140 },
                 { x: 10, y: 140 }
-            ])
+            ], 120, 40)
         ],
         "player": new Player(250, 400, 25),
         "objective": new Objective(100, 100, 40)
@@ -68,7 +68,9 @@ function setup() {
             ]),
             new Laser(50, 50, 10, [
                 { x: 50, y: 50 },
-                { x: 150, y: 250 },
+                { x: 100, y: 50 },
+                { x: 100, y: 250 },
+                { x: 50, y: 250 },
                 { x: 50, y: 450 },
             ]),
             new PatrolGuard(480, 160, 25, [
