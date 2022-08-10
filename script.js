@@ -111,7 +111,7 @@ function setup() {
     });
     levels.push({
         "enemies": [
-            new PowerupCollectable(powerups[0], 50, 445, 30),
+            new PowerupCollectable(powerups[0], 210, 390, 30),
             new Wall([
                 { "x": 0, "y": 430 },
                 { "x": 200, "y": 430 }

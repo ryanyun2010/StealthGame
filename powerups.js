@@ -94,6 +94,7 @@ class PowerupCollectable {
             currentThing = "unlockingpowerup";
             unlocking = this.powerup;
             currentThingTimeLeft = 60;
+            powerups.splice(this.powerup.index, 1);
             powerupsunlocked.push(this.powerup);
         }
 
