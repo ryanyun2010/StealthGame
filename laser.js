@@ -64,7 +64,8 @@ class Laser extends Enemy {
                 this.opacity = 30;
             }
         }
-        fill(255, 0, 0, 50)
+        fill(255, 0, 0, 50);
+        noStroke();
         for (var n of this.nodes) {
             ellipse(n.x, n.y, this.size, this.size)
         }
