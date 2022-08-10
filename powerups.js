@@ -11,7 +11,6 @@ class Powerup {
     }
     draw() {
         fill("black");
-        rect(0, 0, 100, 50);
         image(this.icon, this.index * 30 + 20, 10, 20, 20);
         fill("white");
         textSize(20);
