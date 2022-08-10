@@ -1,8 +1,9 @@
 var enemies, player, playing, objective, levels;
-var curlevel = 0;
+var curlevel = 2;
 var startscreenimg, howtoplayscreenimg, successimg, failureimg, smokeunlockimg, smokeimg;
 var unlocking = "";
 var powerupsunlocked = [];
+var powerups = [];
 var currentThing = "starting";
 var currentThingTimeLeft = 0;
 var using;
@@ -18,7 +19,7 @@ function preload() {
 }
 
 function setup() {
-
+    powerups.push(new SmokeBombPowerup());
     levels = [];
     levels.push({
         "enemies": [new PatrolGuard(250, 250, 25, [
@@ -110,6 +111,7 @@ function setup() {
     });
     levels.push({
         "enemies": [
+            new PowerupCollectable(powerups[0], 50, 430, 30),
             new Wall([
                 { "x": 0, "y": 430 },
                 { "x": 200, "y": 430 }
@@ -136,7 +138,7 @@ function setup() {
             new PatrolGuard(90, 50, 25, [{ "x": 400, "y": 50 }, { "x": 200, "y": 50 }], 15, PI * 0.4, 70, PI / 60),
             new PatrolGuard(400, 50, 25, [{ "x": 400, "y": 50 }, { "x": 200, "y": 50 }], 12, PI * 0.5, 70, PI / 60)
         ],
-        "player": new Player(40, 460, 25),
+        "player": new Player(20, 460, 25),
         "objective": new Objective(400, 100, 40)
     });
 

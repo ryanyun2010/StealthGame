@@ -66,6 +66,7 @@ class SmokeBombPowerup extends Powerup {
             }
         }
     }
+
     disable() {
         this.inUse = false;
         for (var enemy of enemies) {
@@ -74,5 +75,19 @@ class SmokeBombPowerup extends Powerup {
             }
         }
         this.cooldowntime = this.cooldown;
+    }
+}
+class PowerupCollectable {
+    constructor(powerup, x, y, s) {
+        this.powerup = powerup;
+        this.x = x;
+        this.y = y;
+        this.s = s;
+    }
+    draw() {
+        image(this.powerup.icon, this.x, this.y, this.s, this.s);
+    }
+    update() {
+        this.draw();
     }
 }

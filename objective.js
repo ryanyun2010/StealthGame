@@ -31,15 +31,8 @@ class Objective {
                 currentThing = "winning";
                 currentThingTimeLeft = -1;
             } else {
-                if (curlevel == 2) {
-                    currentThing = "unlockingpowerup";
-                    currentThingTimeLeft = 60;
-                    unlocking = new SmokeBombPowerup();
-                    powerupsunlocked.push(unlocking);
-                } else {
-                    currentThingTimeLeft = 30;
-                    currentThing = "winning";
-                }
+                currentThingTimeLeft = 30;
+                currentThing = "winning";
             }
         }
     }
