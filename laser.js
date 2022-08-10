@@ -80,6 +80,7 @@ class Laser extends Enemy {
             var largery = (this.nodes[i].y > this.nodes[i + 1].y) ? this.nodes[i].y : this.nodes[i + 1].y;
             var smallerx = (this.nodes[i].x < this.nodes[i + 1].x) ? this.nodes[i].x : this.nodes[i + 1].x;
             var smallery = (this.nodes[i].y < this.nodes[i + 1].y) ? this.nodes[i].y : this.nodes[i + 1].y;
+
             rect(smallerx - 2, smallery - 2, largerx - smallerx + 4, largery - smallery + 4);
         }
     }
