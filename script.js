@@ -111,7 +111,7 @@ function setup() {
     });
     levels.push({
         "enemies": [
-            new PowerupCollectable(powerups[0], 50, 430, 30),
+            new PowerupCollectable(powerups[0], 50, 445, 30),
             new Wall([
                 { "x": 0, "y": 430 },
                 { "x": 200, "y": 430 }
@@ -208,7 +208,6 @@ function doCurrentAction() {
         image(unlocking.unlockimg, 0, 100, 500, 300);
         if (currentThingTimeLeft == 0) {
             currentThing = "playing";
-            setup();
         }
     }
     if (currentThing == "winning") {

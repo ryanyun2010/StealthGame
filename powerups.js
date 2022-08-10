@@ -89,5 +89,20 @@ class PowerupCollectable {
     }
     update() {
         this.draw();
+        if (this.touchingPlayer()) {
+            this.x = 1000000;
+            currentThing = "unlockingpowerup";
+            unlocking = this.powerup;
+            currentThingTimeLeft = 60;
+            powerupsunlocked.push(this.powerup);
+        }
+
+    }
+    touchingPlayer() {
+
+        if (player.x + player.size / 2 > this.x && player.x - player.size / 2 < this.x + this.s && player.y + player.size / 2 > this.y && player.y - player.size / 2 < this.y + this.s) {
+            return true;
+        }
+        return false;
     }
 }
