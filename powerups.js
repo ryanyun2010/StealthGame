@@ -1,13 +1,13 @@
 class Powerup {
-    constructor(cooldown, duration, unlockimg, icon, index) {
-        this.cooldown = cooldown;
-        this.cooldowntime = 0;
+    constructor(duration, unlockimg, icon, index, spu) {
         this.duration = duration;
         this.timeleft = duration;
         this.unlockimg = unlockimg;
         this.icon = icon;
         this.index = index;
         this.inUse = false;
+        this.skillpointsused = spu;
+        this.unlockedthislevel = false;
     }
     draw() {
         fill("black");
@@ -17,18 +17,22 @@ class Powerup {
         text(this.index, this.index * 30 + 25, 50);
         textSize(10);
         textStyle(NORMAL);
-        if (this.inUse == false && this.cooldowntime != this.cooldown && this.cooldowntime != 0) {
-            text(Math.ceil(this.cooldowntime / 60) + "s til next use", this.index * 30 + 25, 60);
-        }
         if (this.inUse) {
             text(Math.ceil(this.timeleft / 60) + "s left", this.index * 30 + 25, 60)
         }
 
     }
+    useAnimation() {
+        if (this.inUse == false && spb.current >= this.skillpointsused) {
+            currentThing = "usingpowerup";
+            currentThingTimeLeft = 5;
+            using = this;
+        }
+    }
 }
 class SmokeBombPowerup extends Powerup {
     constructor() {
-        super(1800, 120, smokeunlockimg, smokeimg, 0);
+        super(120, smokeunlockimg, smokeimg, 0, 8);
     }
     update() {
         this.draw();
@@ -39,23 +43,12 @@ class SmokeBombPowerup extends Powerup {
         }
         if (this.inUse) {
             this.timeleft--;
-        } else {
-            if (this.cooldowntime > 0) {
-                this.cooldowntime--;
-            }
+        }
+    }
 
-        }
-    }
-    useAnimation() {
-        if (this.inUse == false && this.cooldowntime == 0) {
-            currentThing = "usingpowerup";
-            currentThingTimeLeft = 5;
-            using = this;
-        }
-    }
     use() {
-        if (this.inUse == false && this.cooldowntime == 0) {
-
+        if (this.inUse == false) {
+            spb.current -= this.skillpointsused;
             this.inUse = true;
             this.timeleft = this.duration;
             for (var enemy of enemies) {
@@ -73,8 +66,46 @@ class SmokeBombPowerup extends Powerup {
                 enemy.canAlert = true;
             }
         }
-        this.cooldowntime = this.cooldown;
     }
+}
+
+class WallPhasePowerup extends Powerup {
+    constructor() {
+        super(180, wallphaseunlockimg, wallphaseimg, 1, 5);
+    }
+    update() {
+        this.draw();
+        if (this.timeleft == 0 && this.inUse) {
+            this.timeleft = 0;
+            this.inUse = false;
+            this.disable();
+        }
+        if (this.inUse) {
+            this.timeleft--;
+        }
+    }
+    use() {
+        if (this.inUse == false) {
+            spb.current -= this.skillpointsused;
+            this.inUse = true;
+            this.timeleft = this.duration;
+            for (var enemy of enemies) {
+                if (enemy instanceof Wall) {
+                    enemy.playerCanPass = true;
+                }
+            }
+        }
+    }
+    disable() {
+        this.inUse = false;
+        for (var enemy of enemies) {
+            if (enemy instanceof Wall) {
+                enemy.playerCanPass = false;
+            }
+        }
+    }
+
+
 }
 class PowerupCollectable {
     constructor(powerup, x, y, s) {
@@ -87,13 +118,19 @@ class PowerupCollectable {
         image(this.powerup.icon, this.x, this.y, this.s, this.s);
     }
     update() {
+        for (var powerup of powerupsunlocked) {
+            if (this.powerup == powerup) {
+                this.x = 100000;
+                return;
+            }
+        }
         this.draw();
         if (this.touchingPlayer()) {
-            this.x = 1000000;
+            this.x = 100000;
             currentThing = "unlockingpowerup";
+            this.powerup.unlockedthislevel = true;
             unlocking = this.powerup;
             currentThingTimeLeft = 60;
-            powerups.splice(this.powerup.index, 1);
             powerupsunlocked.push(this.powerup);
         }
 

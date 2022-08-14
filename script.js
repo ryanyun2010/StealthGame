@@ -1,13 +1,13 @@
 var enemies, player, playing, objective, levels;
-var curlevel = 2;
-var startscreenimg, howtoplayscreenimg, successimg, failureimg, smokeunlockimg, smokeimg;
+var curlevel = 0;
+var startscreenimg, howtoplayscreenimg, successimg, failureimg, smokeunlockimg, smokeimg, wallphaseimg, wallphaseunlockimg;
 var unlocking = "";
 var powerupsunlocked = [];
 var powerups = [];
 var currentThing = "starting";
 var currentThingTimeLeft = 0;
 var using;
-
+var spb = new SkillPointBar(10, 10, 80);
 
 function preload() {
     startscreenimg = loadImage("img/startscreen.png");
@@ -16,10 +16,13 @@ function preload() {
     failureimg = loadImage("img/Failure.png");
     smokeunlockimg = loadImage("img/smokebomb.png");
     smokeimg = loadImage("img/smokebombicon.png");
+    wallphaseunlockimg = loadImage("img/WallPhase.png");
+    wallphaseimg = loadImage("img/WallPhaseIcon.png");
 }
 
 function setup() {
     powerups.push(new SmokeBombPowerup());
+    powerups.push(new WallPhasePowerup());
     levels = [];
     levels.push({
         "enemies": [new PatrolGuard(250, 250, 25, [
@@ -141,7 +144,32 @@ function setup() {
         "player": new Player(20, 460, 25),
         "objective": new Objective(400, 100, 40)
     });
-
+    levels.push({
+        "enemies": [
+            new PatrolGuard(0, 200, 25, [{ "x": 0, "y": 200 }, { "x": 500, "y": 200 }], 1, PI * 1.5, 60),
+            new PatrolGuard(100, 200, 25, [{ "x": 0, "y": 200 }, { "x": 500, "y": 200 }], 1, PI * 1.5, 60),
+            new PatrolGuard(200, 200, 25, [{ "x": 0, "y": 200 }, { "x": 500, "y": 200 }], 1, PI * 1.5, 60),
+            new PatrolGuard(300, 200, 25, [{ "x": 0, "y": 200 }, { "x": 500, "y": 200 }], 1, PI * 1.5, 60),
+            new PatrolGuard(400, 200, 25, [{ "x": 0, "y": 200 }, { "x": 500, "y": 200 }], 1, PI * 1.5, 60),
+            new PatrolGuard(500, 200, 25, [{ "x": 0, "y": 200 }, { "x": 500, "y": 200 }], 1, PI * 1.5, 60),
+            new Wall([{ "x": 0, "y": 260 }, { "x": 500, "y": 260 }]),
+            new Wall([{ "x": 250, "y": 260 }, { "x": 250, "y": 350 }]),
+            new Wall([{ "x": 250, "y": 500 }, { "x": 250, "y": 390 }]),
+            new PatrolGuard(200, 260, 25, [{ "x": 200, "y": 260 }, { "x": 200, "y": 500 }], 1, PI * 1.99999999, 60),
+            new Wall([{ "x": 300, "y": 260 }, { "x": 300, "y": 450 }]),
+            new Laser(50, 50, 20, [{ "x": 300, "y": 450 }, { "x": 300, "y": 500 }], 60, 60),
+            new Wall([{ "x": 390, "y": 260 }, { "x": 390, "y": 500 }]),
+            new PatrolGuard(420, 290, 30, [{ "x": 420, "y": 290 }], 1, 1, 1, PI / 70),
+            new PatrolGuard(420, 390, 30, [{ "x": 420, "y": 390 }], 1, 1, 1, PI / 70),
+            new PatrolGuard(420, 340, 30, [{ "x": 420, "y": 340 }], 1, 1, 1, PI / 70),
+            new PatrolGuard(420, 440, 30, [{ "x": 420, "y": 440 }], 1, 1, 1, PI / 70),
+            new PatrolGuard(420, 490, 30, [{ "x": 420, "y": 490 }], 1, 1, 1, PI / 70),
+            new SecurityCamera(420, 390, 30, [PI * 0.9, PI * 1.1], 120, PI / 60, 4, PI * 0.9, PI),
+            new PowerupCollectable(powerups[1], 340, 390, 30),
+        ],
+        "player": new Player(20, 460, 25),
+        "objective": new Objective(400, 100, 40)
+    });
     playing = true;
     setLevel(levels[curlevel]);
     createCanvas(500, 500);
@@ -154,15 +182,21 @@ function setLevel(level) {
 }
 
 document.getElementById("playbtn").addEventListener("click", function() {
-    currentThing = "playing";
+    if (currentThing == "starting") {
+        currentThing = "playing";
+    }
 });
 document.getElementById("howbtn").addEventListener("click", function() {
-    document.getElementById("back").style.display = "block";
-    currentThing = "howtoplay";
+    if (currentThing == "starting") {
+        document.getElementById("back").style.display = "block";
+        currentThing = "howtoplay";
+    }
 });
 document.getElementById("back").addEventListener("click", function() {
-    currentThing = "starting";
-    document.getElementById("back").style.display = "none";
+    if (currentThing == "howtoplay") {
+        currentThing = "starting";
+        document.getElementById("back").style.display = "none";
+    }
 });
 
 function draw() {
@@ -181,9 +215,13 @@ function draw() {
     for (var powerup of powerupsunlocked) {
         powerup.update();
     }
-    if (register[48]) {
+    if (register[48] && powerupsunlocked[0]) {
         powerupsunlocked[0].useAnimation();
     }
+    if (register[39] && powerupsunlocked[1]) {
+        powerupsunlocked[1].useAnimation();
+    }
+    spb.update();
 }
 
 function doCurrentAction() {
@@ -225,6 +263,12 @@ function doCurrentAction() {
                 powerup.inUse = false;
             }
             currentThing = "playing";
+            spb.reset();
+            for (var powerup of powerupsunlocked) {
+                if (powerup.unlockedthislevel == true) {
+                    powerupsunlocked.splice(powerup.index, 1);
+                }
+            }
             setup();
         }
         background(0, 0, 0);

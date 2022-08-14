@@ -1,11 +1,12 @@
 class SecurityCamera extends Enemy {
-    constructor(x, y, s, n, dof, speed, idletime, start) {
+    constructor(x, y, s, n, dof, speed, idletime, start, fov) {
         super(x, y, s, n);
         this.turnspeed = speed || PI / 180;
         this.dof = dof;
         this.state = "pan";
         this.focus = start || this.nodes[0];
         this.idletime = idletime || 60;
+        this.fov = fov || PI / 2;
         this.colors = {
             "idle": color(200, 150, 150, 80),
             "alert": color(200, 60, 60, 255),

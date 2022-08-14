@@ -2,6 +2,7 @@ class Wall extends Enemy {
     constructor(n) {
         super(0, 0, 0, n);
         this.state = "active";
+        this.playerCanPass = false;
     }
     draw() {
         fill("white");

@@ -95,7 +95,7 @@ class Player {
     }
     placeFree() {
         for (var enemy of enemies) {
-            if (enemy instanceof Wall) {
+            if (enemy instanceof Wall && !enemy.playerCanPass) {
                 for (var i = 0; i < enemy.nodes.length - 1; i++) {
                     if (circleLineOverlap(enemy.nodes[i], enemy.nodes[i + 1], this)) {
                         return false;

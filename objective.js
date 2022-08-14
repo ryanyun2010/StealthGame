@@ -33,6 +33,9 @@ class Objective {
             } else {
                 currentThingTimeLeft = 30;
                 currentThing = "winning";
+                for (var powerup of powerupsunlocked) {
+                    powerup.unlockedthislevel = false;
+                }
             }
         }
     }
