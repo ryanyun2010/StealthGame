@@ -37,9 +37,9 @@ class PatrolGuard extends Enemy {
         imageMode(CENTER);
         if (this.state == "chase") {
 
-            image(guardimgs[1], this.x, this.y, this.size, this.size * 0.7)
+            rotatedimg(guardimgs[1], this.x, this.y, this.size, this.size * 0.7, this.focus);
         } else {
-            image(guardimgs[0], this.x, this.y, this.size, this.size * 0.7)
+            rotatedimg(guardimgs[0], this.x, this.y, this.size, this.size * 0.7, this.focus);
         }
         imageMode(CORNER);
 

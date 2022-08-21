@@ -1,6 +1,6 @@
 var enemies, player, playing, objective, levels;
 var curlevel = 0;
-var startscreenimg, howtoplayscreenimg, successimg, failureimg, smokeunlockimg, smokeimg, wallphaseimg, wallphaseunlockimg, spritesheet, guardimgs, energyimg;
+var startscreenimg, howtoplayscreenimg, successimg, failureimg, smokeunlockimg, smokeimg, wallphaseimg, wallphaseunlockimg, spritesheet, guardimgs, energyimg, cameraimg;
 var playerimages = { "left": [], "right": [], "up": [], "down": [] }
 var unlocking = "";
 var powerupsunlocked = [];
@@ -100,6 +100,7 @@ function preload() {
     spritesheet = loadImage("img/spritesheet.png");
     guardimgs = [loadImage("img/guardneutral.png"), loadImage("img/guardchase.png")];
     energyimg = loadImage("img/energyball.png");
+    cameraimg = loadImage("img/camera.png");
 }
 
 
@@ -109,7 +110,7 @@ function setup() {
     powerups.push(new WallPhasePowerup());
     levels = [];
     levels.push({
-        "enemies": [new PatrolGuard(250, 250, 50, [
+        "enemies": [new PatrolGuard(250, 250, [
                 { x: 250, y: 250 },
                 { x: 160, y: 40 },
                 { x: 160, y: 160 },

@@ -40,6 +40,16 @@ function circleLineOverlap(n1, n2, c) {
     }
 }
 
+function rotatedimg(img, img_x, img_y, img_width, img_height, img_angle) {
+    imageMode(CENTER);
+    translate(img_x, img_y);
+    rotate(img_angle);
+    image(img, 0, 0, img_width, img_height);
+    rotate(-img_angle);
+    translate(-img_x, -img_y);
+    imageMode(CORNER);
+}
+
 function rectOverlap(rect1, rect2) {
     if (rect1.x < rect2.x + rect2.w &&
         rect1.x + rect1.w > rect2.x &&

@@ -26,9 +26,7 @@ class SecurityCamera extends Enemy {
         }
 
         //draw the enemy as a red circle
-        fill(this.colors.self);
-        rectMode(CENTER, CENTER);
-        rect(this.x, this.y, this.size, this.size)
+        rotatedimg(cameraimg, this.x, this.y, this.size * 1.5, this.size * 0.75, this.focus);
 
     }
     states() {
