@@ -11,17 +11,10 @@ class Objective {
         rect(this.x, this.y, this.s, this.s);
     }
     isTouchingPlayer() {
-        var leftx = this.x - this.s / 2;
-        var rightx = this.x + this.s / 2;
-        var topy = this.y - this.s / 2;
-        var bottomy = this.y + this.s / 2;
-        var playerleftx = player.x - player.size / 2;
-        var playerrightx = player.x + player.size / 2;
-        var playertopy = player.y - player.size / 2;
-        var playerbottomy = player.y + player.size / 2;
-        if (playerrightx > leftx && playerbottomy > topy && playertopy < bottomy && playerleftx < rightx) {
+        if (rectOverlap({ "x": this.x - this.s / 2, "y": this.y - this.y / 2, "w": this.s, "h": this.s }, player)) {
             return true;
         }
+        return false;
     }
     update() {
         this.draw();

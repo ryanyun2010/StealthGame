@@ -89,7 +89,15 @@ class Laser extends Enemy {
         for (var i = 0; i < this.nodes.length - 1; i++) {
             let n1 = this.nodes[i];
             let n2 = this.nodes[i + 1];
-            if (circleLineOverlap(n1, n2, player)) {
+            var width = (Math.abs(n1.x - n2.x) < 4) ? 4 : Math.abs(n1.x - n2.x);
+            var height = (Math.abs(n1.y - n2.y) < 4) ? 4 : Math.abs(n1.y - n2.y);
+            var smallerx = (n1.x <= n2.x) ? n1.x : n2.x;
+            var smallery = (n1.y <= n2.y) ? n1.y : n2.y
+            console.log(width, height);
+
+            var rect1 = { "x": smallerx, "y": smallery, "w": width, "h": height };
+            if (rectOverlap(rect1, player)) {
+                console.log(rect1, player);
                 return true;
             }
         }

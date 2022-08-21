@@ -1,6 +1,7 @@
 var enemies, player, playing, objective, levels;
 var curlevel = 0;
-var startscreenimg, howtoplayscreenimg, successimg, failureimg, smokeunlockimg, smokeimg, wallphaseimg, wallphaseunlockimg;
+var startscreenimg, howtoplayscreenimg, successimg, failureimg, smokeunlockimg, smokeimg, wallphaseimg, wallphaseunlockimg, spritesheet;
+var playerimages = { "left": [], "right": [], "up": [], "down": [] }
 var unlocking = "";
 var powerupsunlocked = [];
 var powerups = [];
@@ -8,6 +9,7 @@ var currentThing = "starting";
 var currentThingTimeLeft = 0;
 var using;
 var spb = new SkillPointBar(10, 10, 80);
+
 
 function preload() {
     startscreenimg = loadImage("img/startscreen.png");
@@ -18,7 +20,17 @@ function preload() {
     smokeimg = loadImage("img/smokebombicon.png");
     wallphaseunlockimg = loadImage("img/WallPhase.png");
     wallphaseimg = loadImage("img/WallPhaseIcon.png");
+    playerimages.left.push(loadImage("img/Player/Left 1.png"));
+    playerimages.left.push(loadImage("img/Player/Left 2.png"));
+    playerimages.right.push(loadImage("img/Player/Right 1.png"));
+    playerimages.right.push(loadImage("img/Player/Right 2.png"));
+    playerimages.down.push(loadImage("img/Player/Down 1.png"));
+    playerimages.down.push(loadImage("img/Player/Down 2.png"));
+    playerimages.up.push(loadImage("img/Player/Up 1.png"));
+    playerimages.up.push(loadImage("img/Player/Up 2.png"));
+    spritesheet = loadImage("img/spritesheet.png");
 }
+
 
 function setup() {
     powerups.push(new SmokeBombPowerup());
@@ -281,11 +293,10 @@ function doCurrentAction() {
 function checkGameOver() {
     for (var enemy of enemies) {
         if (enemy instanceof PatrolGuard) {
-            let d = dist(enemy.x, enemy.y, player.x, player.y);
-            let s = (player.size + enemy.size) / 2;
-            if (d < s) {
-                currentThingTimeLeft = 15;
+            if (rectOverlap({ "x": enemy.x - enemy.size / 2, "y": enemy.y - enemy.size / 2, "w": enemy.size, "h": enemy.size }, player)) {
+                console.log("FAIL")
                 currentThing = "failing";
+                currentThingTimeLeft = 15;
             }
         }
     }
