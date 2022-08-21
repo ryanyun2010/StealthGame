@@ -1,6 +1,6 @@
 var enemies, player, playing, objective, levels;
 var curlevel = 0;
-var startscreenimg, howtoplayscreenimg, successimg, failureimg, smokeunlockimg, smokeimg, wallphaseimg, wallphaseunlockimg, spritesheet;
+var startscreenimg, howtoplayscreenimg, successimg, failureimg, smokeunlockimg, smokeimg, wallphaseimg, wallphaseunlockimg, spritesheet, guardimgs, energyimg;
 var playerimages = { "left": [], "right": [], "up": [], "down": [] }
 var unlocking = "";
 var powerupsunlocked = [];
@@ -98,6 +98,8 @@ function preload() {
     playerimages.up.push(loadImage("img/Player/Up 1.png"));
     playerimages.up.push(loadImage("img/Player/Up 2.png"));
     spritesheet = loadImage("img/spritesheet.png");
+    guardimgs = [loadImage("img/guardneutral.png"), loadImage("img/guardchase.png")];
+    energyimg = loadImage("img/energyball.png");
 }
 
 
@@ -107,7 +109,7 @@ function setup() {
     powerups.push(new WallPhasePowerup());
     levels = [];
     levels.push({
-        "enemies": [new PatrolGuard(250, 250, 25, [
+        "enemies": [new PatrolGuard(250, 250, 50, [
                 { x: 250, y: 250 },
                 { x: 160, y: 40 },
                 { x: 160, y: 160 },
@@ -115,7 +117,7 @@ function setup() {
                 { x: 40, y: 460 },
                 { x: 250, y: 460 }
             ]),
-            new PatrolGuard(40, 160, 25, [
+            new PatrolGuard(40, 160, [
                 { x: 40, y: 160 },
                 { x: 40, y: 460 },
                 { x: 250, y: 460 },
@@ -123,7 +125,7 @@ function setup() {
                 { x: 160, y: 40 },
                 { x: 160, y: 160 }
             ]),
-            new PatrolGuard(300, 250, 25, [
+            new PatrolGuard(300, 250, [
                 { x: 300, y: 40 },
                 { x: 300, y: 460 },
                 { x: 460, y: 460 },
@@ -139,7 +141,7 @@ function setup() {
             ], 120, 40)
         ],
         "player": new Player(250, 400, 25),
-        "objective": new Objective(100, 100, 40)
+        "objective": new Objective(100, 100, 70)
     });
     levels.push({
         "enemies": [
@@ -159,25 +161,25 @@ function setup() {
                 { x: 50, y: 250 },
                 { x: 50, y: 450 },
             ]),
-            new PatrolGuard(480, 160, 25, [
+            new PatrolGuard(480, 160, [
                 { x: 470, y: 150 },
                 { x: 310, y: 150 },
                 { x: 310, y: 40 },
                 { x: 310, y: 150 }
             ]),
-            new PatrolGuard(340, 160, 25, [
+            new PatrolGuard(340, 160, [
                 { x: 370, y: 180 },
                 { x: 330, y: 40 },
                 { x: 360, y: 180 },
                 { x: 450, y: 180 }
             ]),
-            new PatrolGuard(340, 40, 25, [
+            new PatrolGuard(340, 40, [
                 { x: 340, y: 40 },
                 { x: 350, y: 160 },
                 { x: 480, y: 160 },
                 { x: 340, y: 160 }
             ]),
-            new PatrolGuard(20, 20, 25, [
+            new PatrolGuard(20, 20, [
                 { x: 20, y: 20 },
                 { x: 100, y: 100 },
                 { x: 20, y: 180 },
@@ -186,13 +188,13 @@ function setup() {
                 { x: 100, y: 420 },
                 { x: 20, y: 480 }
             ], 20),
-            new PatrolGuard(20, 450, 25, [
+            new PatrolGuard(20, 450, [
                 { x: 20, y: 450 },
                 { x: 450, y: 450 }
             ])
         ],
         "player": new Player(250, 400, 25),
-        "objective": new Objective(400, 100, 40)
+        "objective": new Objective(400, 100, 70)
     });
     levels.push({
         "enemies": [
@@ -213,27 +215,27 @@ function setup() {
                 { "x": 450, "y": 150 },
             ]),
             new Laser(50, 50, 20, [{ "x": 450, "y": 150 }, { "x": 500, "y": 150 }], 30, 60),
-            new PatrolGuard(400, 460, 25, [
+            new PatrolGuard(400, 460, [
                 { "x": 400, "y": 460 },
                 { "x": 120, "y": 460 }
             ], 30, PI / 10, 40),
             new SecurityCamera(500, 0, 20, [PI, PI * 0.5], 250, PI / 60, 1, PI * 0.7),
-            new PatrolGuard(400, 150, 25, [{ "x": 400, "y": 150 }, { "x": 200, "y": 150 }], 11, PI * 0.6, 70, PI / 60),
-            new PatrolGuard(260, 150, 25, [{ "x": 400, "y": 150 }, { "x": 200, "y": 150 }], 7, PI * 0.3, 70, PI / 60),
-            new PatrolGuard(90, 50, 25, [{ "x": 400, "y": 50 }, { "x": 200, "y": 50 }], 15, PI * 0.4, 70, PI / 60),
-            new PatrolGuard(400, 50, 25, [{ "x": 400, "y": 50 }, { "x": 200, "y": 50 }], 12, PI * 0.5, 70, PI / 60)
+            new PatrolGuard(400, 150, [{ "x": 400, "y": 150 }, { "x": 200, "y": 150 }], 11, PI * 0.6, 70, PI / 60),
+            new PatrolGuard(260, 150, [{ "x": 400, "y": 150 }, { "x": 200, "y": 150 }], 7, PI * 0.3, 70, PI / 60),
+            new PatrolGuard(90, 50, [{ "x": 400, "y": 50 }, { "x": 200, "y": 50 }], 15, PI * 0.4, 70, PI / 60),
+            new PatrolGuard(400, 50, [{ "x": 400, "y": 50 }, { "x": 200, "y": 50 }], 12, PI * 0.5, 70, PI / 60)
         ],
         "player": new Player(20, 435, 25),
-        "objective": new Objective(400, 100, 40)
+        "objective": new Objective(400, 100, 70)
     });
     levels.push({
         "enemies": [
-            new PatrolGuard(0, 200, 25, [{ "x": 0, "y": 200 }, { "x": 500, "y": 200 }], 1, PI * 1.5, 60),
-            new PatrolGuard(100, 200, 25, [{ "x": 0, "y": 200 }, { "x": 500, "y": 200 }], 1, PI * 1.5, 60),
-            new PatrolGuard(200, 200, 25, [{ "x": 0, "y": 200 }, { "x": 500, "y": 200 }], 1, PI * 1.5, 60),
-            new PatrolGuard(300, 200, 25, [{ "x": 0, "y": 200 }, { "x": 500, "y": 200 }], 1, PI * 1.5, 60),
-            new PatrolGuard(400, 200, 25, [{ "x": 0, "y": 200 }, { "x": 500, "y": 200 }], 1, PI * 1.5, 60),
-            new PatrolGuard(500, 200, 25, [{ "x": 0, "y": 200 }, { "x": 500, "y": 200 }], 1, PI * 1.5, 60),
+            new PatrolGuard(0, 200, [{ "x": 0, "y": 200 }, { "x": 500, "y": 200 }], 1, PI * 1.5, 60),
+            new PatrolGuard(100, 200, [{ "x": 0, "y": 200 }, { "x": 500, "y": 200 }], 1, PI * 1.5, 60),
+            new PatrolGuard(200, 200, [{ "x": 0, "y": 200 }, { "x": 500, "y": 200 }], 1, PI * 1.5, 60),
+            new PatrolGuard(300, 200, [{ "x": 0, "y": 200 }, { "x": 500, "y": 200 }], 1, PI * 1.5, 60),
+            new PatrolGuard(400, 200, [{ "x": 0, "y": 200 }, { "x": 500, "y": 200 }], 1, PI * 1.5, 60),
+            new PatrolGuard(500, 200, [{ "x": 0, "y": 200 }, { "x": 500, "y": 200 }], 1, PI * 1.5, 60),
             new Wall([{ "x": 0, "y": 260 }, { "x": 500, "y": 260 }]),
             new Wall([{ "x": 250, "y": 260 }, { "x": 250, "y": 350 }]),
             new Wall([{ "x": 250, "y": 500 }, { "x": 250, "y": 440 }]),
@@ -241,16 +243,16 @@ function setup() {
             new Wall([{ "x": 300, "y": 260 }, { "x": 300, "y": 410 }]),
             new Laser(50, 50, 20, [{ "x": 300, "y": 410 }, { "x": 300, "y": 500 }], 60, 60),
             new Wall([{ "x": 390, "y": 260 }, { "x": 390, "y": 500 }]),
-            new PatrolGuard(420, 290, 30, [{ "x": 420, "y": 290 }], 1, 1, 1, PI / 70),
-            new PatrolGuard(420, 390, 30, [{ "x": 420, "y": 390 }], 1, 1, 1, PI / 70),
-            new PatrolGuard(420, 340, 30, [{ "x": 420, "y": 340 }], 1, 1, 1, PI / 70),
-            new PatrolGuard(420, 440, 30, [{ "x": 420, "y": 440 }], 1, 1, 1, PI / 70),
-            new PatrolGuard(420, 490, 30, [{ "x": 420, "y": 490 }], 1, 1, 1, PI / 70),
+            new PatrolGuard(420, 290, [{ "x": 420, "y": 290 }], 1, 1, 1, PI / 70),
+            new PatrolGuard(420, 390, [{ "x": 420, "y": 390 }], 1, 1, 1, PI / 70),
+            new PatrolGuard(420, 340, [{ "x": 420, "y": 340 }], 1, 1, 1, PI / 70),
+            new PatrolGuard(420, 440, [{ "x": 420, "y": 440 }], 1, 1, 1, PI / 70),
+            new PatrolGuard(420, 490, [{ "x": 420, "y": 490 }], 1, 1, 1, PI / 70),
             new SecurityCamera(420, 390, 30, [PI * 0.9, PI * 1.1], 100, PI / 60, 4, PI * 0.9, PI),
             new PowerupCollectable(powerups[1], 340, 390, 30),
         ],
         "player": new Player(20, 400, 25),
-        "objective": new Objective(400, 100, 40)
+        "objective": new Objective(400, 100, 70)
     });
     playing = true;
     if (curlevel == 2) {

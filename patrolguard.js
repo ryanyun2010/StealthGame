@@ -1,15 +1,14 @@
 class PatrolGuard extends Enemy {
-    constructor(x, y, s, n, idletime, fov, dof, turnspeed) {
-        super(x, y, s, n);
+    constructor(x, y, n, idletime, fov, dof, turnspeed) {
+        super(x, y, 35, n);
         this.idletime = idletime || 60;
         this.fov = fov || PI / 4;
         this.dof = dof || 150;
         this.turnspeed = turnspeed || PI / 120;
         this.colors = {
-            "chase": color(255, 0, 0, 255),
-            "idle": color(255, 40, 40, 150),
-            "patrol": color(255, 40, 40, 190),
-            "self": color(255, 255, 255)
+            "chase": color(200, 0, 0, 150),
+            "idle": color(40, 160, 160, 150),
+            "patrol": color(40, 160, 160, 190)
         };
     }
     states() {
@@ -35,9 +34,14 @@ class PatrolGuard extends Enemy {
         let diameter = this.dof * 2;
         arc(this.x, this.y, diameter, diameter, left, right);
 
-        //draw the enemy as a red circle
-        fill(this.colors.self);
-        ellipse(this.x, this.y, this.size, this.size);
+        imageMode(CENTER);
+        if (this.state == "chase") {
+
+            image(guardimgs[1], this.x, this.y, this.size, this.size * 0.7)
+        } else {
+            image(guardimgs[0], this.x, this.y, this.size, this.size * 0.7)
+        }
+        imageMode(CORNER);
 
     }
     transitions() {

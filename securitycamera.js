@@ -9,7 +9,7 @@ class SecurityCamera extends Enemy {
         this.fov = fov || PI / 2;
         this.colors = {
             "idle": color(200, 150, 150, 80),
-            "alert": color(200, 60, 60, 255),
+            "alert": color(200, 60, 60, 190),
             "pan": color(200, 150, 150, 80),
             "self": color(120, 120, 120)
         };
