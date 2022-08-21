@@ -93,11 +93,9 @@ class Laser extends Enemy {
             var height = (Math.abs(n1.y - n2.y) < 4) ? 4 : Math.abs(n1.y - n2.y);
             var smallerx = (n1.x <= n2.x) ? n1.x : n2.x;
             var smallery = (n1.y <= n2.y) ? n1.y : n2.y
-            console.log(width, height);
 
             var rect1 = { "x": smallerx, "y": smallery, "w": width, "h": height };
             if (rectOverlap(rect1, player)) {
-                console.log(rect1, player);
                 return true;
             }
         }

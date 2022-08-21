@@ -82,13 +82,12 @@ class SecurityCamera extends Enemy {
             }
         }
         if (this.state != "alert") {
-            console.log({ "x": player.x + player.size / 2, "y": player.y + player.size, "size": player.size });
-            if (canSee(this, { "x": player.x + player.w / 2, "y": player.y + player.h, "size": player.size }) && this.canAlert) {
+            if (canSeePlayer(this) && this.canAlert) {
                 this.state = "alert";
             }
         }
         if (this.state == "alert") {
-            if (!canSee(this, { "x": player.x + player.w / 2, "y": player.y + player.h, "size": player.size })) {
+            if (!canSeePlayer(this)) {
                 this.state = "idle";
             }
         }

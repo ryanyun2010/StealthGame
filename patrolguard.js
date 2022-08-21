@@ -42,12 +42,12 @@ class PatrolGuard extends Enemy {
     }
     transitions() {
         if (this.state != "chase") {
-            if (canSee(this, { "x": player.x + player.w / 2, "y": player.y + player.h, "size": player.size })) {
+            if (canSeePlayer(this)) {
                 this.state = "chase";
             }
         }
         if (this.state == "chase") {
-            if (!canSee(this, { "x": player.x + player.w / 2, "y": player.y + player.h, "size": player.size })) {
+            if (!canSeePlayer(this)) {
                 this.state = "idle";
             }
         }

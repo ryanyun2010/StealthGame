@@ -9,7 +9,76 @@ var currentThing = "starting";
 var currentThingTimeLeft = 0;
 var using;
 var spb = new SkillPointBar(10, 10, 80);
+var backgroundtiles = [];
+var spritemappings = [
+    ["grass", 5, 0],
+    ["waterl", 2, 1],
+    ["waterr", 4, 1],
+    ["watert", 3, 0],
+    ["waterb", 3, 2],
+    ["water", 1, 0],
+    ["watertl", 1, 2],
+    ["watertr", 0, 2],
+    ["waterbl", 1, 1],
+    ["waterbr", 0, 1]
+];
+var originalbackgroundtiles = [];
+// backgroundtiles[y][x] not background tiles [x][y];
+for (var i = 0; i < 31; i++) {
+    backgroundtiles.push([]);
+    for (var j = 0; j < 31; j++) {
+        backgroundtiles[i].push("grass");
+    }
 
+}
+for (var i = 1; i < 30; i++) {
+    backgroundtiles[1][i] = "waterb";
+    backgroundtiles[0][i] = "water";
+}
+for (var i = 1; i < 30; i++) {
+    backgroundtiles[i][1] = "waterr";
+    backgroundtiles[i][0] = "water";
+}
+for (var i = 1; i < 30; i++) {
+    backgroundtiles[i][29] = "waterl";
+    backgroundtiles[i][30] = "water";
+}
+for (var i = 1; i < 30; i++) {
+    backgroundtiles[29][i] = "watert";
+    backgroundtiles[30][i] = "water";
+}
+backgroundtiles[29][29] = "watertl";
+backgroundtiles[1][29] = "waterbl";
+backgroundtiles[29][0] = "water";
+backgroundtiles[1][1] = "waterbr";
+backgroundtiles[30][30] = "water";
+backgroundtiles[30][0] = "water";
+backgroundtiles[0][0] = "water";
+backgroundtiles[0][30] = "water";
+backgroundtiles[29][1] = "watertr";
+for (var i = 0; i < backgroundtiles.length; i++) {
+    originalbackgroundtiles.push([])
+    for (var j = 0; j < backgroundtiles[i].length; j++) {
+        originalbackgroundtiles[i].push(backgroundtiles[i][j]);
+    }
+}
+
+function doesTileHaveWater(x, y) {
+    if (x >= 496 || y >= 496) {
+        return true;
+    }
+    if (x <= 0 || y <= 0) {
+        return true;
+    }
+    if (backgroundtiles[Math.floor(y / 16)][Math.floor(x / 16)].includes("water")) {
+        return true;
+    }
+    return false;
+}
+
+function drawSprite(x, y, s, sx, sy) {
+    image(spritesheet, x, y, 16 * s, 16 * s, sx * 17, sy * 17, 16, 16);
+}
 
 function preload() {
     startscreenimg = loadImage("img/startscreen.png");
@@ -33,6 +102,7 @@ function preload() {
 
 
 function setup() {
+
     powerups.push(new SmokeBombPowerup());
     powerups.push(new WallPhasePowerup());
     levels = [];
@@ -133,8 +203,8 @@ function setup() {
             ]),
             new Wall([
                 { "x": 200, "y": 430 },
-                { "x": 200, "y": 370 },
-                { "x": 250, "y": 370 },
+                { "x": 200, "y": 350 },
+                { "x": 250, "y": 350 },
                 { "x": 250, "y": 430 },
                 { "x": 400, "y": 430 }
             ]),
@@ -153,7 +223,7 @@ function setup() {
             new PatrolGuard(90, 50, 25, [{ "x": 400, "y": 50 }, { "x": 200, "y": 50 }], 15, PI * 0.4, 70, PI / 60),
             new PatrolGuard(400, 50, 25, [{ "x": 400, "y": 50 }, { "x": 200, "y": 50 }], 12, PI * 0.5, 70, PI / 60)
         ],
-        "player": new Player(20, 460, 25),
+        "player": new Player(20, 435, 25),
         "objective": new Objective(400, 100, 40)
     });
     levels.push({
@@ -166,25 +236,61 @@ function setup() {
             new PatrolGuard(500, 200, 25, [{ "x": 0, "y": 200 }, { "x": 500, "y": 200 }], 1, PI * 1.5, 60),
             new Wall([{ "x": 0, "y": 260 }, { "x": 500, "y": 260 }]),
             new Wall([{ "x": 250, "y": 260 }, { "x": 250, "y": 350 }]),
-            new Wall([{ "x": 250, "y": 500 }, { "x": 250, "y": 390 }]),
+            new Wall([{ "x": 250, "y": 500 }, { "x": 250, "y": 440 }]),
             new PatrolGuard(200, 260, 25, [{ "x": 200, "y": 260 }, { "x": 200, "y": 500 }], 1, PI * 1.99999999, 60),
-            new Wall([{ "x": 300, "y": 260 }, { "x": 300, "y": 450 }]),
-            new Laser(50, 50, 20, [{ "x": 300, "y": 450 }, { "x": 300, "y": 500 }], 60, 60),
+            new Wall([{ "x": 300, "y": 260 }, { "x": 300, "y": 410 }]),
+            new Laser(50, 50, 20, [{ "x": 300, "y": 410 }, { "x": 300, "y": 500 }], 60, 60),
             new Wall([{ "x": 390, "y": 260 }, { "x": 390, "y": 500 }]),
             new PatrolGuard(420, 290, 30, [{ "x": 420, "y": 290 }], 1, 1, 1, PI / 70),
             new PatrolGuard(420, 390, 30, [{ "x": 420, "y": 390 }], 1, 1, 1, PI / 70),
             new PatrolGuard(420, 340, 30, [{ "x": 420, "y": 340 }], 1, 1, 1, PI / 70),
             new PatrolGuard(420, 440, 30, [{ "x": 420, "y": 440 }], 1, 1, 1, PI / 70),
             new PatrolGuard(420, 490, 30, [{ "x": 420, "y": 490 }], 1, 1, 1, PI / 70),
-            new SecurityCamera(420, 390, 30, [PI * 0.9, PI * 1.1], 120, PI / 60, 4, PI * 0.9, PI),
+            new SecurityCamera(420, 390, 30, [PI * 0.9, PI * 1.1], 100, PI / 60, 4, PI * 0.9, PI),
             new PowerupCollectable(powerups[1], 340, 390, 30),
         ],
-        "player": new Player(20, 460, 25),
+        "player": new Player(20, 400, 25),
         "objective": new Objective(400, 100, 40)
     });
     playing = true;
+    if (curlevel == 2) {
+        for (var i = 2; i < backgroundtiles[0].length; i++) {
+            backgroundtiles[30][i] = "grass";
+            backgroundtiles[29][i] = "grass";
+        }
+        for (var i = 2; i < backgroundtiles[0].length; i++) {
+            backgroundtiles[i][30] = "grass";
+            backgroundtiles[i][29] = "grass";
+        }
+        backgroundtiles[1][29] = "waterb";
+        backgroundtiles[1][30] = "waterb";
+        backgroundtiles[29][1] = "waterr";
+        backgroundtiles[30][1] = "waterr";
+        for (var i = 1; i < backgroundtiles[15].length; i++) {
+            backgroundtiles[15][i] = "water";
+        }
+        for (var i = 2; i < backgroundtiles[14].length; i++) {
+            backgroundtiles[14][i] = "watert";
+        }
+        for (var i = 2; i < backgroundtiles[16].length; i++) {
+            backgroundtiles[16][i] = "waterb";
+        }
+        backgroundtiles[16][1] = "waterbr";
+        backgroundtiles[14][1] = "watertr";
+    }
+    if (curlevel == 3) {
+        backgroundtiles = originalbackgroundtiles;
+        for (var i = 2; i < backgroundtiles[0].length - 2; i++) {
+            backgroundtiles[30][i] = "grass";
+            backgroundtiles[29][i] = "grass";
+        }
+        backgroundtiles[29][29] = "waterl";
+        backgroundtiles[30][29] = "waterl";
+        backgroundtiles[29][1] = "waterr";
+        backgroundtiles[30][1] = "waterr";
+    }
     setLevel(levels[curlevel]);
-    createCanvas(500, 500);
+    createCanvas(496, 496);
 }
 
 function setLevel(level) {
@@ -216,7 +322,16 @@ function draw() {
         doCurrentAction();
         return;
     }
-    background(0, 0, 0);
+    for (var i = 0; i < backgroundtiles.length; i++) {
+        for (var j = 0; j < backgroundtiles[i].length; j++) {
+            for (var k = 0; k < spritemappings.length; k++) {
+                if (backgroundtiles[i][j] == spritemappings[k][0]) {
+                    drawSprite(j * 16, i * 16, 1, spritemappings[k][1], spritemappings[k][2]);
+                }
+            }
+        }
+    }
+
     for (enemy of enemies) {
         enemy.update();
     }
@@ -294,7 +409,6 @@ function checkGameOver() {
     for (var enemy of enemies) {
         if (enemy instanceof PatrolGuard) {
             if (rectOverlap({ "x": enemy.x - enemy.size / 2, "y": enemy.y - enemy.size / 2, "w": enemy.size, "h": enemy.size }, player)) {
-                console.log("FAIL")
                 currentThing = "failing";
                 currentThingTimeLeft = 15;
             }
