@@ -71,7 +71,7 @@ class SmokeBombPowerup extends Powerup {
 
 class WallPhasePowerup extends Powerup {
     constructor() {
-        super(180, wallphaseunlockimg, wallphaseimg, 1, 5);
+        super(30, wallphaseunlockimg, wallphaseimg, 1, 5);
     }
     update() {
         this.draw();
